@@ -9,7 +9,7 @@ jobs:
     name: "Run Eslint"
     steps:
       - uses: actions/checkout@v3
-      - uses: ./.github/install-tooling
+      - uses: Szandor72/devops-center-actions/.github/install-tooling@main
       - name: Run eslint
         run: |
           npm run lint
@@ -20,7 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
-      - uses: ./.github/install-tooling
+      - uses: Szandor72/devops-center-actions/.github/install-tooling@main
       - name: "Run PMD Checks and fail Build"
         #  PMD CLI does not allow for several paths to be scanned
         # because a dx project could use several packageDirectories
