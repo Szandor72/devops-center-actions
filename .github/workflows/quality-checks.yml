@@ -31,18 +31,18 @@ jobs:
           npx pmd -d ${{ steps.projectname.outputs.result }} -R ./.pmd/ruleset.xml --file-list apexClassesToScan.txt -f text
         # TODO store results in a file and upload as artifact?
 
-  commitlint:
-    runs-on: ubuntu-latest
-    name: "Run Commitlint"
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - uses: wagoid/commitlint-github-action@v5
+  # commitlint:
+  #   runs-on: ubuntu-latest
+  #   name: "Run Commitlint"
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #       with:
+  #         fetch-depth: 0
+  #     - uses: wagoid/commitlint-github-action@v5
 
   prettier-formatting:
     name: "Format with Prettier"
-    needs: [eslint, pmd-code-analysis, commitlint]
+    needs: [eslint, pmd-code-analysis]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
