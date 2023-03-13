@@ -28,7 +28,10 @@ jobs:
         # and pmd root directory is set to project directory
         run: |
           find ${{ steps.projectname.outputs.result }} -name '*.cls' > apexClassesToScan.txt
-          npx pmd -d ${{ steps.projectname.outputs.result }} -R ./.pmd/ruleset.xml --file-list apexClassesToScan.txt -f text
+          npx pmd -d ${{ steps.projectname.outputs.result }} \
+             -R ./node_modules/devops-center-local-config-files/pmd-rulesets/apex-ruleset.xml \
+             --file-list apexClassesToScan.txt \
+             -f text
         # TODO store results in a file and upload as artifact?
 
   # commitlint:
