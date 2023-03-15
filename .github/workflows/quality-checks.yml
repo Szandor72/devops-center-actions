@@ -51,6 +51,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
+      - uses: Szandor72/devops-center-actions/.github/install-tooling@main
       - uses: creyD/prettier_action@v4.3
         with:
           prettier_options: --write **/*.{cls,cmp,component,css,html,js,json,md,page,trigger,xml,yaml,yml} --no-error-on-unmatched-pattern
