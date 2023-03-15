@@ -23,3 +23,9 @@ runs:
       run: |
         npm ci
       shell: bash
+
+    - name: Copy local files only
+      if: steps.cache-nodemodules.outputs.cache-hit == 'true'
+      run: |
+        npm run postinstall
+      shell: bash
