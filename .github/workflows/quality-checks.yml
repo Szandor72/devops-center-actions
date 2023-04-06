@@ -44,6 +44,7 @@ jobs:
       - name: "Run PMD Checks and fail Build"
         run: |
           find ${{ steps.projectname.outputs.result }} -name '*.object-meta.xml' -o -name '*.field-meta.xml' > sObjectsToScan.txt
+          cat sObjectsToScan.txt
           npx pmd -d ${{ steps.projectname.outputs.result }} \
              -R ./.pmd/sobject-ruleset.xml \
              --file-list sObjectsToScan.txt \
