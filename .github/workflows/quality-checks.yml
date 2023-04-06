@@ -16,7 +16,7 @@ jobs:
 
   pmd-code-analysis:
     runs-on: ubuntu-latest
-    name: "Run PMD"
+    name: "Run PMD for Apex"
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -29,10 +29,25 @@ jobs:
         run: |
           find ${{ steps.projectname.outputs.result }} -name '*.cls' > apexClassesToScan.txt
           npx pmd -d ${{ steps.projectname.outputs.result }} \
-             -R ./node_modules/devops-center-local-config-files/pmd-rulesets/apex-ruleset.xml \
+             -R ./.pmd/apex-ruleset.xml \
              --file-list apexClassesToScan.txt \
              -f text
         # TODO store results in a file and upload as artifact?
+
+  pmd-sobject-analysis:
+    runs-on: ubuntu-latest
+    name: "Run PMD for sObjects"
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+      - uses: Szandor72/devops-center-actions/.github/install-tooling@main
+      - name: "Run PMD Checks and fail Build"
+        run: |
+          find ${{ steps.projectname.outputs.result }} -name '*.object-meta.xml' -o -name '*.field-meta.xml' > sObjectsToScan.txt
+          npx pmd -d ${{ steps.projectname.outputs.result }} \
+             -R ./.pmd/sobject-ruleset.xml \
+             --file-list sObjectsToScan.txt \
+             -f text
 
   # commitlint:
   #   runs-on: ubuntu-latest
