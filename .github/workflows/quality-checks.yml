@@ -28,6 +28,8 @@ jobs:
         # and pmd root directory is set to project directory
         run: |
           find ${{ steps.projectname.outputs.result }} -name '*.cls' > apexClassesToScan.txt
+          ls ./.pmd
+          cat apexClassesToScan.txt
           npx pmd -d ${{ steps.projectname.outputs.result }} \
              -R ./.pmd/apex-ruleset.xml \
              --file-list apexClassesToScan.txt \
@@ -44,7 +46,8 @@ jobs:
       - name: "Run PMD Checks and fail Build"
         run: |
           find ${{ steps.projectname.outputs.result }} -name '*.object-meta.xml' -o -name '*.field-meta.xml' > sObjectsToScan.txt
-          cat sObjectsToScan.txt
+            ls ./.pmd
+          cat sObjectsToScan.txt.txt
           npx pmd -d ${{ steps.projectname.outputs.result }} \
              -R ./.pmd/sobject-ruleset.xml \
              --file-list sObjectsToScan.txt \
@@ -61,7 +64,7 @@ jobs:
 
   prettier-formatting:
     name: "Format with Prettier"
-    needs: [eslint, pmd-code-analysis]
+    needs: [eslint, pmd-code-analysis, pmd-sobject-analysis]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
