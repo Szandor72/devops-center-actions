@@ -28,7 +28,7 @@ jobs:
         # and pmd root directory is set to project directory
         run: |
           find ${{ steps.projectname.outputs.result }} -name '*.cls' > apexClassesToScan.txt
-          ls ./.pmd
+          cat ./.pmd/apex-ruleset.xml
           cat apexClassesToScan.txt
           npx pmd -d ${{ steps.projectname.outputs.result }} \
              -R ./.pmd/apex-ruleset.xml \
@@ -46,8 +46,8 @@ jobs:
       - name: "Run PMD Checks and fail Build"
         run: |
           find ${{ steps.projectname.outputs.result }} -name '*.object-meta.xml' -o -name '*.field-meta.xml' > sObjectsToScan.txt
-            ls ./.pmd
-          cat sObjectsToScan.txt.txt
+          cat ./.pmd/sobject-ruleset.xml
+          cat sObjectsToScan.txt
           npx pmd -d ${{ steps.projectname.outputs.result }} \
              -R ./.pmd/sobject-ruleset.xml \
              --file-list sObjectsToScan.txt \
