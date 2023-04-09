@@ -21,16 +21,16 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
       - uses: Szandor72/devops-center-actions/.github/install-tooling@main
-      - name: "Run PMD Checks and fail Build"
+      - name: "Use Apex Ruleset"
         #  PMD CLI does not allow for several paths to be scanned
         # because a dx project could use several packageDirectories
         # (each containing Apex classes), a file list is created
         # and pmd root directory is set to project directory
         run: |
-          find ${{ steps.projectname.outputs.result }} -name '*.cls' > apexClassesToScan.txt
+          find ./ -name '*.cls' > apexClassesToScan.txt
           cat ./.pmd/apex-ruleset.xml
           cat apexClassesToScan.txt
-          npx pmd -d ${{ steps.projectname.outputs.result }} \
+          npx pmd -d ./ \
              -R ./.pmd/apex-ruleset.xml \
              --file-list apexClassesToScan.txt \
              -f text
@@ -43,14 +43,48 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
       - uses: Szandor72/devops-center-actions/.github/install-tooling@main
-      - name: "Run PMD Checks and fail Build"
+      - name: "Use sObject Ruleset"
         run: |
-          find ${{ steps.projectname.outputs.result }} -name '*.object-meta.xml' -o -name '*.field-meta.xml' > sObjectsToScan.txt
+          find ./ -name '*.object-meta.xml' -o -name '*.field-meta.xml' > sObjectsToScan.txt
           cat ./.pmd/sobject-ruleset.xml
           cat sObjectsToScan.txt
-          npx pmd -d ${{ steps.projectname.outputs.result }} \
+          npx pmd -d ./ \
              -R ./.pmd/sobject-ruleset.xml \
              --file-list sObjectsToScan.txt \
+             -f text
+
+  pmd-flow-analysis:
+    runs-on: ubuntu-latest
+    name: "Run PMD for Flows"
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+      - uses: Szandor72/devops-center-actions/.github/install-tooling@main
+      - name: "Use Flow Ruleset"
+        run: |
+          find ./ -name '*.flow-meta.xml' > flowsToScan.txt
+          cat ./.pmd/flow-ruleset.xml
+          cat flowsToScan.txt
+          npx pmd -d ./ \
+             -R ./.pmd/flow-ruleset.xml \
+             --file-list flowsToScan.txt \
+             -f text
+
+  pmd-misc-metadata-analysis:
+    runs-on: ubuntu-latest
+    name: "Run PMD for Miscellaneaous Metadata"
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+      - uses: Szandor72/devops-center-actions/.github/install-tooling@main
+      - name: "Use Misc Ruleset"
+        run: |
+          find ./ -name '*.flexipage-meta.xml' > metadataToScan.txt
+          cat ./.pmd/misc-ruleset.xml
+          cat metadataToScan.txt
+          npx pmd -d ./ \
+             -R ./.pmd/flow-ruleset.xml \
+             --file-list metadataToScan.txt \
              -f text
 
   # commitlint:
