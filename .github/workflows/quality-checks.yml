@@ -14,7 +14,7 @@ jobs:
         run: |
           npm run lint
 
-  pmd-code-analysis:
+  pmd-apex:
     runs-on: ubuntu-latest
     name: "Run PMD for Apex"
     steps:
@@ -28,15 +28,18 @@ jobs:
         # and pmd root directory is set to project directory
         run: |
           find ./ -name '*.cls' > apexClassesToScan.txt
-          cat ./.pmd/apex-ruleset.xml
-          cat apexClassesToScan.txt
-          npx pmd -d ./ \
+          npx pmd \
              -R ./.pmd/apex-ruleset.xml \
              --file-list apexClassesToScan.txt \
              -f text
-        # TODO store results in a file and upload as artifact?
+      - name: "Show File Details"
+        run: |
+          cat apexClassesToScan.txt
+      - name: "Show Rule Details"
+        run: |
+          cat ./.pmd/apex-ruleset.xml
 
-  pmd-sobject-analysis:
+  pmd-sobject:
     runs-on: ubuntu-latest
     name: "Run PMD for sObjects"
     steps:
@@ -46,14 +49,18 @@ jobs:
       - name: "Use sObject Ruleset"
         run: |
           find ./ -name '*.object-meta.xml' -o -name '*.field-meta.xml' > sObjectsToScan.txt
-          cat ./.pmd/sobject-ruleset.xml
-          cat sObjectsToScan.txt
-          npx pmd -d ./ \
+          npx pmd \
              -R ./.pmd/sobject-ruleset.xml \
              --file-list sObjectsToScan.txt \
              -f text
+      - name: "Show File Details"
+        run: |
+          cat sObjectsToScan.txt
+      - name: "Show Rule Details"
+        run: |
+          cat ./.pmd/sobject-ruleset.xml
 
-  pmd-flow-analysis:
+  pmd-flow:
     runs-on: ubuntu-latest
     name: "Run PMD for Flows"
     steps:
@@ -63,14 +70,18 @@ jobs:
       - name: "Use Flow Ruleset"
         run: |
           find ./ -name '*.flow-meta.xml' > flowsToScan.txt
-          cat ./.pmd/flow-ruleset.xml
-          cat flowsToScan.txt
-          npx pmd -d ./ \
+          npx pmd \
              -R ./.pmd/flow-ruleset.xml \
              --file-list flowsToScan.txt \
              -f text
+      - name: "Show File Details"
+        run: |
+          cat flowsToScan.txt
+      - name: "Show Rule Details"
+        run: |
+          cat ./.pmd/flow-ruleset.xml
 
-  pmd-misc-metadata-analysis:
+  pmd-misc:
     runs-on: ubuntu-latest
     name: "Run PMD for Miscellaneaous Metadata"
     steps:
@@ -80,12 +91,16 @@ jobs:
       - name: "Use Misc Ruleset"
         run: |
           find ./ -name '*.flexipage-meta.xml' > metadataToScan.txt
-          cat ./.pmd/misc-ruleset.xml
-          cat metadataToScan.txt
-          npx pmd -d ./ \
-             -R ./.pmd/flow-ruleset.xml \
+          npx pmd \
+             -R ./.pmd/misc-ruleset.xml \
              --file-list metadataToScan.txt \
              -f text
+      - name: "Show File Details"
+        run: |
+          cat metadataToScan.txt
+      - name: "Show Rule Details"
+        run: |
+          cat ./.pmd/misc-ruleset.xml
 
   # commitlint:
   #   runs-on: ubuntu-latest
@@ -98,7 +113,7 @@ jobs:
 
   prettier-formatting:
     name: "Format with Prettier"
-    needs: [eslint, pmd-code-analysis, pmd-sobject-analysis]
+    needs: [eslint, pmd-apex, pmd-sobject, pmd-flow, pmd-misc]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
