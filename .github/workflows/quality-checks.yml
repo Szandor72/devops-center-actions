@@ -21,23 +21,25 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
       - uses: Szandor72/devops-center-actions/.github/install-tooling@main
-      - name: "Use Apex Ruleset"
         #  PMD CLI does not allow for several paths to be scanned
         # because a dx project could use several packageDirectories
         # (each containing Apex classes), a file list is created
         # and pmd root directory is set to project directory
+      - name: "Identify Files to Scan"
         run: |
           find ./ -name '*.cls' > apexClassesToScan.txt
-          npx pmd \
-             -R ./.pmd/apex-ruleset.xml \
-             --file-list apexClassesToScan.txt \
-             -f text
       - name: "Show File Details"
         run: |
           cat apexClassesToScan.txt
       - name: "Show Rule Details"
         run: |
           cat ./.pmd/apex-ruleset.xml
+      - name: "Use Apex Ruleset"
+        run: |
+          npx pmd \
+             -R ./.pmd/apex-ruleset.xml \
+             --file-list apexClassesToScan.txt \
+             -f text
 
   pmd-sobject:
     runs-on: ubuntu-latest
@@ -46,19 +48,21 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
       - uses: Szandor72/devops-center-actions/.github/install-tooling@main
-      - name: "Use sObject Ruleset"
+      - name: "Identify Files to Scan"
         run: |
           find ./ -name '*.object-meta.xml' -o -name '*.field-meta.xml' > sObjectsToScan.txt
-          npx pmd \
-             -R ./.pmd/sobject-ruleset.xml \
-             --file-list sObjectsToScan.txt \
-             -f text
       - name: "Show File Details"
         run: |
           cat sObjectsToScan.txt
       - name: "Show Rule Details"
         run: |
           cat ./.pmd/sobject-ruleset.xml
+      - name: "Use sObject Ruleset"
+        run: |
+          npx pmd \
+             -R ./.pmd/sobject-ruleset.xml \
+             --file-list sObjectsToScan.txt \
+             -f text
 
   pmd-flow:
     runs-on: ubuntu-latest
@@ -67,19 +71,21 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
       - uses: Szandor72/devops-center-actions/.github/install-tooling@main
-      - name: "Use Flow Ruleset"
+      - name: "Identify Files to Scan"
         run: |
           find ./ -name '*.flow-meta.xml' > flowsToScan.txt
-          npx pmd \
-             -R ./.pmd/flow-ruleset.xml \
-             --file-list flowsToScan.txt \
-             -f text
       - name: "Show File Details"
         run: |
           cat flowsToScan.txt
       - name: "Show Rule Details"
         run: |
           cat ./.pmd/flow-ruleset.xml
+      - name: "Use Flow Ruleset"
+        run: |
+          npx pmd \
+             -R ./.pmd/flow-ruleset.xml \
+             --file-list flowsToScan.txt \
+             -f text
 
   pmd-misc:
     runs-on: ubuntu-latest
@@ -88,19 +94,21 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
       - uses: Szandor72/devops-center-actions/.github/install-tooling@main
-      - name: "Use Misc Ruleset"
+      - name: "Identify Files to Scan"
         run: |
           find ./ -name '*.flexipage-meta.xml' > metadataToScan.txt
-          npx pmd \
-             -R ./.pmd/misc-ruleset.xml \
-             --file-list metadataToScan.txt \
-             -f text
       - name: "Show File Details"
         run: |
           cat metadataToScan.txt
       - name: "Show Rule Details"
         run: |
           cat ./.pmd/misc-ruleset.xml
+      - name: "Use Misc Ruleset"
+        run: |
+          npx pmd \
+             -R ./.pmd/misc-ruleset.xml \
+             --file-list metadataToScan.txt \
+             -f text
 
   # commitlint:
   #   runs-on: ubuntu-latest
