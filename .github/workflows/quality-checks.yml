@@ -110,6 +110,8 @@ jobs:
              --file-list metadataToScan.txt \
              -f text
 
+  # commitlint is used to enforce commit message format
+  # Since DevOps Center does its own commit msgs, this cannot be used
   # commitlint:
   #   runs-on: ubuntu-latest
   #   name: "Run Commitlint"
@@ -131,6 +133,6 @@ jobs:
       - uses: creyD/prettier_action@v4.3
         with:
           prettier_options: --write **/*.{cls,cmp,component,css,html,js,json,md,page,trigger,xml,yaml,yml} --no-error-on-unmatched-pattern
-          # same_commit: True
+          same_commit: True
           only_changed: True
           prettier_plugins: "prettier-plugin-apex @prettier/plugin-xml"
