@@ -14,6 +14,16 @@ jobs:
         run: |
           npm run lint
 
+  lwc-jest:
+    runs-on: ubuntu-latest
+    name: "Run LWC Tests"
+    steps:
+      - uses: actions/checkout@v3
+      - uses: Szandor72/devops-center-actions/.github/install-tooling@main
+      - name: Run sfdx-lwc-jest
+        run: |
+          npm run test
+
   pmd-apex:
     runs-on: ubuntu-latest
     name: "Run PMD for Apex"
@@ -123,7 +133,7 @@ jobs:
 
   prettier-formatting:
     name: "Format with Prettier"
-    needs: [eslint, pmd-apex, pmd-sobject, pmd-flow, pmd-misc]
+    needs: [eslint, lwc-jest, pmd-apex, pmd-sobject, pmd-flow, pmd-misc]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
