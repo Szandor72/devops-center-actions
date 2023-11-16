@@ -11,22 +11,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Setup Salesforce CLI
+      - name: Setup Salesforce CLI and Run Commands
         uses: docker://salesforce/cli:latest-full
         with:
-          entrypoint: /bin/bash
-
-      - uses: Szandor72/devops-center-actions/.github/install-tooling@main
-
-      - name: Install plugin
-        run: |
-          sf plugins install @salesforce/sfdx-scanner
-
-      - name: Identify files to scan
-        run: |
-          node .\scripts\ci\prepare-scan.js
-
-      - name: Run Scan
-        run: |
-          sf scanner run --target .\new-files-to-scan\ --engine pmd --category "Security, Performance"
-          sf scanner run --target .\modified-files-to-scan\ --engine pmd --category "Security, Performance"
+          args: |
+            sf plugins install @salesforce/sfdx-scanner
+            node .\scripts\ci\prepare-scan.js
+            sf scanner run --target .\new-files-to-scan\ --engine pmd --category "Security, Performance"
+            sf scanner run --target .\modified-files-to-scan\ --engine pmd --category "Security, Performance"
