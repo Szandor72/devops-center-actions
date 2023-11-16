@@ -12,7 +12,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Setup Salesforce CLI
-        uses: docker://salesforce/salesforce/cli:latest-full
+        uses: docker://salesforce/cli:latest-full
         with:
           entrypoint: /bin/bash
 
