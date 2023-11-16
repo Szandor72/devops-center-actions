@@ -23,7 +23,7 @@ jobs:
 
       - name: Identify files to scan
         run: |
-          node .\scripts\ci\prepare-scan.js
+          node ./scripts/ci/prepare-scan.js
 
       - name: Run Scan
         run: |
