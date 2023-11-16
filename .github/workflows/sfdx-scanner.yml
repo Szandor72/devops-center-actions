@@ -9,7 +9,7 @@ jobs:
     name: "Prepare and initiate scan"
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - uses: Szandor72/devops-center-actions/.github/install-tooling@main
 
