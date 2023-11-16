@@ -1,0 +1,32 @@
+name: SF(DX) Scanner
+
+on:
+  workflow_call:
+
+jobs:
+  prepare-scan:
+    runs-on: ubuntu-latest
+    name: "Prepare and initiate scan"
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Salesforce CLI
+        uses: docker://salesforce/salesforce/cli:latest-full
+        with:
+          entrypoint: /bin/bash
+
+      - uses: Szandor72/devops-center-actions/.github/install-tooling@main
+
+      - name: Install plugin
+        run: |
+          sf plugins install @salesforce/sfdx-scanner
+
+      - name: Identify files to scan
+        run: |
+          node .\scripts\ci\prepare-scan.js
+
+      - name: Run Scan
+        run: |
+          sf scanner run --target .\new-files-to-scan\ --engine pmd --category "Security, Performance"
+          sf scanner run --target .\modified-files-to-scan\ --engine pmd --category "Security, Performance"
