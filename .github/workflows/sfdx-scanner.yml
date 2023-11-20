@@ -10,8 +10,15 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: Szandor72/devops-center-actions/.github/install-tooling@main
+
+      - name: Fetch all Files and prepare scan
+        run: |
+          git fetch --all
+          node ./scripts/ci/prepare-scan.js
 
       - name: "Install Salesforce CLI"
         run: |
@@ -20,11 +27,6 @@ jobs:
       - name: Install plugin
         run: |
           sf plugins install @salesforce/sfdx-scanner
-
-      - name: Fetch all Files and prepare scan
-        run: |
-          git fetch --all
-          node ./scripts/ci/prepare-scan.js
 
       - name: Run Scan
         run: |
