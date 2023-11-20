@@ -21,8 +21,9 @@ jobs:
         run: |
           sf plugins install @salesforce/sfdx-scanner
 
-      - name: Identify files to scan
+      - name: Fetch all Files and prepare scan
         run: |
+          git fetch --all
           node ./scripts/ci/prepare-scan.js
 
       - name: Run Scan
