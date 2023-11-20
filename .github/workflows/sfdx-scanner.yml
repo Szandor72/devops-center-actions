@@ -27,5 +27,5 @@ jobs:
 
       - name: Run Scan
         run: |
-          sf scanner run --target .\new-files-to-scan\ --engine pmd --category "Security, Performance"
-          sf scanner run --target .\modified-files-to-scan\ --engine pmd --category "Security, Performance"
+          sf scanner run --target ./new-files-to-scan/ --engine pmd --category "Security, Performance"
+          sf scanner run --target ./modified-files-to-scan/ --engine pmd --category "Security, Performance"
