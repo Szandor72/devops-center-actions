@@ -31,7 +31,7 @@ jobs:
       - name: "Run Strict Scan on new files"
         run: |
           sf scanner run --target ./force-app/ \
-            --normalize-severity
+            --normalize-severity \
             --severity-threshold 3
 
       - name: "Run Legacy Scan on modified legacy files"
