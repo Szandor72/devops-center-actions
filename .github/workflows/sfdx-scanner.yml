@@ -27,13 +27,6 @@ jobs:
       - name: "Install plugin"
         run: |
           sf plugins install @salesforce/sfdx-scanner
-
-      - name: "Run Strict Scan on new files"
-        run: |
-          sf scanner run --target ./force-app/ \
-            --normalize-severity \
-            --severity-threshold 3
-
       - name: "Run Legacy Scan on modified legacy files"
         run: |
           sf scanner run --target ./legacy-metadata/ \
@@ -41,6 +34,12 @@ jobs:
             --category "Security,Performance,problem,Insecure Dependencies" \
             --normalize-severity
             --outfile scan-results.csv
+
+      - name: "Run Strict Scan on other files"
+        run: |
+          sf scanner run --target ./force-app/ \
+            --normalize-severity \
+            --severity-threshold 3
 
       - name: Upload scan results
         uses: actions/upload-artifact@v2
