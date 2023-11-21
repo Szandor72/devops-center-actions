@@ -33,9 +33,7 @@ jobs:
             --engine "pmd,eslint-lwc,retire-js" \
             --category "Security,Performance,problem,Insecure Dependencies" \
             --normalize-severity \ 
-            --format json \
-            --outfile scan-results.json
-
+            --format json
       - name: Upload scan results
         uses: actions/upload-artifact@v3
         with:
