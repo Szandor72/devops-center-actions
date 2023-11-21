@@ -40,3 +40,10 @@ jobs:
             --engine "pmd,eslint-lwc,retire-js" \
             --category "Security,Performance,problem,Insecure Dependencies" \
             --normalize-severity
+            --outfile scan-results.csv
+
+      - name: Upload scan results
+        uses: actions/upload-artifact@v2
+        with:
+          name: scan-results
+          path: scan-results.csv
