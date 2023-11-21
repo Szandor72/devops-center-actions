@@ -30,8 +30,13 @@ jobs:
 
       - name: "Run Strict Scan on new files"
         run: |
-          sf scanner run --target ./force-app/
+          sf scanner run --target ./force-app/ \
+            --normalize-severity
+            --severity-threshold 3
 
       - name: "Run Legacy Scan on modified legacy files"
         run: |
-          sf scanner run --target ./legacy-metadata/ --engine "pmd,eslint-lwc,retire-js" --category "Security,Performance,problem,Insecure Dependencies"
+          sf scanner run --target ./legacy-metadata/ \
+            --engine "pmd,eslint-lwc,retire-js" \
+            --category "Security,Performance,problem,Insecure Dependencies" \
+            --normalize-severity
