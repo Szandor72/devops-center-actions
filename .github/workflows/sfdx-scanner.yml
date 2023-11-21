@@ -32,14 +32,15 @@ jobs:
           sf scanner run --target ./legacy-metadata/ \
             --engine "pmd,eslint-lwc,retire-js" \
             --category "Security,Performance,problem,Insecure Dependencies" \
-            --normalize-severity \
-            --outfile scan-results.csv
+            --normalize-severity \ 
+            --format json \
+            --outfile scan-results.json
 
       - name: Upload scan results
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: scan-results
-          path: scan-results.csv
+          path: scan-results.json
 
       - name: "Run Strict Scan on other files"
         run: |
