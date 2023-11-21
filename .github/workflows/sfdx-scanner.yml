@@ -32,17 +32,17 @@ jobs:
           sf scanner run --target ./legacy-metadata/ \
             --engine "pmd,eslint-lwc,retire-js" \
             --category "Security,Performance,problem,Insecure Dependencies" \
-            --normalize-severity
-            --outfile scan-results.csv
-
-      - name: "Run Strict Scan on other files"
-        run: |
-          sf scanner run --target ./force-app/ \
             --normalize-severity \
-            --severity-threshold 3
+            --outfile scan-results.csv
 
       - name: Upload scan results
         uses: actions/upload-artifact@v2
         with:
           name: scan-results
           path: scan-results.csv
+
+      - name: "Run Strict Scan on other files"
+        run: |
+          sf scanner run --target ./force-app/ \
+            --normalize-severity \
+            --severity-threshold 3
