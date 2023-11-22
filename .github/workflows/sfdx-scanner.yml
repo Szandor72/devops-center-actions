@@ -23,6 +23,11 @@ jobs:
       - name: "Install Salesforce CLI"
         run: |
           npm install @salesforce/cli --location=global
+    
+      - name: 'Populate auth file and log in to Org'
+          run: |
+              echo ${{ secrets.INTEGRATION_SANDBOX_SFDX_URL}} > ./INTEGRATION_SANDBOX_SFDX_URL.auth
+              sf org login sfdx-url --sfdx-url-file INTEGRATION_SANDBOX_SFDX_URL.auth --alias integration_sandbox
 
       - name: "Install plugin"
         run: |
@@ -31,7 +36,7 @@ jobs:
         run: |
           sf scanner run --target ./legacy-metadata/ --engine "pmd,eslint-lwc,retire-js" --category "Security,Performance,problem,Insecure Dependencies" --outfile "legacy-scan-results.json" --format json --normalize-severity
 
-      - name: "Parse Legacy Scan Results"
+      - name: "Parse Legacy Scan Results and Upload to Org"
         run: |
           node ./scripts/ci/parse-scan-results.js legacy-scan-results.json legacy-scan-results.csv
 
@@ -41,11 +46,11 @@ jobs:
           name: legacy-scan-results
           path: legacy-scan-results.csv
 
-      - name: "Run Strict Scan on other files"
+      - name: "Run Strict Scan on non legacy files"
         run: |
           sf scanner run --target ./force-app/ --severity-threshold 3 --outfile "scan-results.json" --format json --normalize-severity
 
-      - name: "Handle Scan Results for non legacy code"
+      - name: "Handle Scan Results for non legacy files"
         if: failure()
         run: |
           node ./scripts/ci/parse-scan-results.js
