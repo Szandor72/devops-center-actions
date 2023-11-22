@@ -23,11 +23,11 @@ jobs:
       - name: "Install Salesforce CLI"
         run: |
           npm install @salesforce/cli --location=global
-    
-      - name: 'Populate auth file and log in to Org'
-          run: |
-              echo ${{ secrets.INTEGRATION_SANDBOX_SFDX_URL}} > ./INTEGRATION_SANDBOX_SFDX_URL.auth
-              sf org login sfdx-url --sfdx-url-file INTEGRATION_SANDBOX_SFDX_URL.auth --alias integration_sandbox
+
+      - name: "Populate auth file and log in to Org"
+        run: |
+          echo ${{ secrets.INTEGRATION_SANDBOX_SFDX_URL}} > ./INTEGRATION_SANDBOX_SFDX_URL.auth
+          sf org login sfdx-url --sfdx-url-file INTEGRATION_SANDBOX_SFDX_URL.auth --alias integration_sandbox
 
       - name: "Install plugin"
         run: |
