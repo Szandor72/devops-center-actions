@@ -46,5 +46,6 @@ jobs:
           sf scanner run --target ./force-app/ --severity-threshold 3 --outfile "scan-results.json" --format json --normalize-severity
 
       - name: "Handle Scan Results for non legacy code"
+        if: failure()
         run: |
           node ./scripts/ci/parse-scan-results.js
