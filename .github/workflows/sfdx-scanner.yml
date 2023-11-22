@@ -29,12 +29,7 @@ jobs:
           sf plugins install @salesforce/sfdx-scanner
       - name: "Run Legacy Scan on modified legacy files"
         run: |
-          sf scanner run --target ./legacy-metadata/ \
-            --engine "pmd,eslint-lwc,retire-js" \
-            --category "Security,Performance,problem,Insecure Dependencies" \
-            --normalize-severity \ 
-            --outfile scan-results.json \ 
-            --format json
+          sf scanner run --target ./legacy-metadata/ --engine "pmd,eslint-lwc,retire-js" --category "Security,Performance,problem,Insecure Dependencies" --outfile "scan-results.json" --format json --normalize-severity
 
       - name: "Parse scan results"
         run: |
