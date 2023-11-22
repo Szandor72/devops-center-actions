@@ -27,6 +27,7 @@ jobs:
       - name: "Populate auth file and log in to Org"
         run: |
           echo ${{ secrets.INTEGRATION_SANDBOX_SFDX_URL}} > ./INTEGRATION_SANDBOX_SFDX_URL.auth
+          cat ./INTEGRATION_SANDBOX_SFDX_URL.auth
           sf org login sfdx-url --sfdx-url-file ./INTEGRATION_SANDBOX_SFDX_URL.auth --alias integration_sandbox
 
       - name: "Install plugin"
