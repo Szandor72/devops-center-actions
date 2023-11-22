@@ -27,8 +27,6 @@ jobs:
       - name: "Populate auth file and log in to Org"
         run: |
           echo ${{ secrets.INTEGRATION_SANDBOX_SFDX_URL}} > ./INTEGRATION_SANDBOX_SFDX_URL.auth
-          ls -lh
-          cat ./INTEGRATION_SANDBOX_SFDX_URL.auth
           sf org login sfdx-url --sfdx-url-file ./INTEGRATION_SANDBOX_SFDX_URL.auth --alias integration_sandbox
 
       - name: "Install plugin"
@@ -42,7 +40,7 @@ jobs:
         run: |
           node ./scripts/ci/parse-scan-results.js legacy-scan-results.json legacy-scan-results.csv
 
-      - name: "Upload Legacy Scan Results"
+      - name: "Store Legacy Scan Results on GitHub"
         uses: actions/upload-artifact@v3
         with:
           name: legacy-scan-results
