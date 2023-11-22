@@ -29,20 +29,27 @@ jobs:
           sf plugins install @salesforce/sfdx-scanner
       - name: "Run Legacy Scan on modified legacy files"
         run: |
-          sf scanner run --target ./legacy-metadata/ --engine "pmd,eslint-lwc,retire-js" --category "Security,Performance,problem,Insecure Dependencies" --outfile "scan-results.json" --format json --normalize-severity
+          sf scanner run --target ./legacy-metadata/ --engine "pmd,eslint-lwc,retire-js" --category "Security,Performance,problem,Insecure Dependencies" --outfile "legacy-scan-results.json" --format json --normalize-severity
 
-      - name: "Parse scan results"
+      - name: "Parse Legacy Scan Results"
         run: |
-          node ./scripts/ci/parse-scan-results.js
+          node ./scripts/ci/parse-scan-results.js legacy-scan-results.json legacy-scan-results.csv
 
-      - name: Upload scan results
+      - name: "Upload Legacy Scan Results"
         uses: actions/upload-artifact@v3
         with:
-          name: scan-results
-          path: scan-results.json
+          name: legacy-scan-results
+          path: legacy-scan-results.csv
 
       - name: "Run Strict Scan on other files"
         run: |
           sf scanner run --target ./force-app/ \
             --normalize-severity \
-            --severity-threshold 3
+            --severity-threshold 3 \
+            --outfile "scan-results.json" \ 
+            --format json \
+            --normalize-severity
+
+      - name: "Handle Scan Results for non legacy code"
+        run: |
+          node ./scripts/ci/parse-scan-results.js
