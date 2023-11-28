@@ -18,7 +18,7 @@ jobs:
       - name: "Fetch all Files and prepare scan"
         run: |
           git fetch --all
-          node ./scripts/ci/prepare-scan.js
+          node .ci/prepare-scan.js
 
       - name: "Install Salesforce CLI"
         run: |
@@ -38,7 +38,7 @@ jobs:
 
       - name: "Parse Legacy Scan Results and Upload to Org"
         run: |
-          node ./scripts/ci/parse-scan-results.js legacy-scan-results.json legacy-scan-results.csv
+          node .ci/parse-scan-results.js legacy-scan-results.json legacy-scan-results.csv
 
       - name: "Store Legacy Scan Results on GitHub"
         uses: actions/upload-artifact@v3
