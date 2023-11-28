@@ -53,4 +53,4 @@ jobs:
       - name: "Handle Scan Results for non legacy files"
         if: failure()
         run: |
-          node ./scripts/ci/parse-scan-results.js
+          node .ci/parse-scan-results.js
