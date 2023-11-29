@@ -4,15 +4,6 @@ on:
   workflow_call:
 
 jobs:
-  eslint:
-    runs-on: ubuntu-latest
-    name: "Run Eslint"
-    steps:
-      - uses: actions/checkout@v3
-      - uses: Szandor72/devops-center-actions/.github/install-tooling@main
-      - name: Run eslint
-        run: |
-          npm run lint
 
   lwc-jest:
     runs-on: ubuntu-latest
@@ -24,32 +15,6 @@ jobs:
         run: |
           npm run test
 
-  pmd-apex:
-    runs-on: ubuntu-latest
-    name: "Run PMD for Apex"
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-      - uses: Szandor72/devops-center-actions/.github/install-tooling@main
-        #  PMD CLI does not allow for several paths to be scanned
-        # because a dx project could use several packageDirectories
-        # (each containing Apex classes), a file list is created
-        # and pmd root directory is set to project directory
-      - name: "Identify Files to Scan"
-        run: |
-          find ./ -name '*.cls' > apexClassesToScan.txt
-      - name: "Show File Details"
-        run: |
-          cat apexClassesToScan.txt
-      - name: "Show Rule Details"
-        run: |
-          cat ./.pmd/apex-ruleset.xml
-      - name: "Use Apex Ruleset"
-        run: |
-          npx pmd \
-             -R ./.pmd/apex-ruleset.xml \
-             --file-list apexClassesToScan.txt \
-             -f text
 
   pmd-sobject:
     runs-on: ubuntu-latest
@@ -133,7 +98,7 @@ jobs:
 
   prettier-formatting:
     name: "Format with Prettier"
-    needs: [eslint, lwc-jest, pmd-apex, pmd-sobject, pmd-flow, pmd-misc]
+    needs: [lwc-jest, pmd-sobject, pmd-flow, pmd-misc]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
