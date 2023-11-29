@@ -4,7 +4,6 @@ on:
   workflow_call:
 
 jobs:
-
   lwc-jest:
     runs-on: ubuntu-latest
     name: "Run LWC Tests"
@@ -14,7 +13,6 @@ jobs:
       - name: Run sfdx-lwc-jest
         run: |
           npm run test
-
 
   pmd-sobject:
     runs-on: ubuntu-latest
@@ -96,18 +94,19 @@ jobs:
   #         fetch-depth: 0
   #     - uses: wagoid/commitlint-github-action@v5
 
-  prettier-formatting:
-    name: "Format with Prettier"
-    needs: [lwc-jest, pmd-sobject, pmd-flow, pmd-misc]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - uses: Szandor72/devops-center-actions/.github/install-tooling@main
-      - uses: creyD/prettier_action@v4.3
-        with:
-          prettier_options: --write **/*.{cls,cmp,component,css,html,js,json,md,page,trigger,xml,yaml,yml} --no-error-on-unmatched-pattern
-          same_commit: True
-          only_changed: True
-          prettier_plugins: "prettier-plugin-apex @prettier/plugin-xml"
+  # stopped working, parsers cannot be inferred for xml and apex; no clue why as plugins seem to be installed but not recognized
+  # prettier-formatting:
+  #   name: "Format with Prettier"
+  #   needs: [lwc-jest, pmd-sobject, pmd-flow, pmd-misc]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #       with:
+  #         fetch-depth: 0
+  #     - uses: Szandor72/devops-center-actions/.github/install-tooling@main
+  #     - uses: creyD/prettier_action@v4.3
+  #       with:
+  #         prettier_options: --write **/*.{cls,cmp,component,css,html,js,json,md,page,trigger,xml,yaml,yml} --no-error-on-unmatched-pattern
+  #         same_commit: True
+  #         only_changed: True
+  #         prettier_plugins: "prettier-plugin-apex @prettier/plugin-xml"
