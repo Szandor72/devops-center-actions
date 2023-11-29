@@ -6,7 +6,7 @@ on:
 jobs:
   prepare-scan:
     runs-on: ubuntu-latest
-    name: "Prepare and initiate scan"
+    name: "Code Scan"
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
