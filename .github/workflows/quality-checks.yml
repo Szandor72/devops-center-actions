@@ -98,8 +98,7 @@ jobs:
   #         fetch-depth: 0
   #     - uses: wagoid/commitlint-github-action@v5
 
-  # stopped working, parsers cannot be inferred for xml and apex; no clue why as plugins seem to be installed but not
-  # TODO hardcode plugin versions - local tests showed it will help
+  # for the apex stuff to run, prettier versions must match specific plugin versions
   prettier-formatting:
     name: "Format with Prettier"
     # needs: [lwc-jest, pmd-sobject, pmd-flow, pmd-misc]
@@ -107,6 +106,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
+          ref: ${{ github.head_ref }}
           fetch-depth: 0
       - uses: Szandor72/devops-center-actions/.github/install-tooling@main
       - uses: creyD/prettier_action@v4.3
