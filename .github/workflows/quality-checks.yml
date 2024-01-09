@@ -1,4 +1,4 @@
-name: Code Quality Checks
+name: Quality Checks
 
 on:
   workflow_call:
@@ -6,7 +6,7 @@ on:
 jobs:
   lwc-jest:
     runs-on: ubuntu-latest
-    name: "Run LWC Tests"
+    name: "LWC Tests"
     steps:
       - uses: actions/checkout@v3
       - uses: Szandor72/devops-center-actions/.github/install-tooling@main
@@ -16,43 +16,23 @@ jobs:
 
   pmd-sobject:
     runs-on: ubuntu-latest
-    name: "Run PMD for sObjects"
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-      - uses: Szandor72/devops-center-actions/.github/install-tooling@main
-      - name: "Identify Files to Scan"
-        run: |
-          find ./ -name '*.object-meta.xml' -o -name '*.field-meta.xml' > sObjectsToScan.txt
-      - name: "Show File Details"
-        run: |
-          cat sObjectsToScan.txt
-      - name: "Show Rule Details"
-        run: |
-          cat ./.pmd/sobject-ruleset.xml
-      - name: "Use sObject Ruleset"
-        run: |
-          npx pmd \
-             -R ./.pmd/sobject-ruleset.xml \
-             --file-list sObjectsToScan.txt \
-             -f text
-
-  pmd-sobject2:
-    runs-on: ubuntu-latest
-    name: "Run PMD for sObjects with SFDX SCANNER"
+    name: "PMD for sObjects"
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - uses: actions/setup-node@v4
       - uses: Szandor72/devops-center-actions/.github/install-tooling@main
+      - name: "Show Rule Details"
+        run: |
+          cat ./.pmd/sobject-ruleset.xml
       - name: "Fetch all Files and prepare scan"
         run: |
           git fetch --all
           node .ci/prepare-scan.js
       - name: "Scan sObjects and Custom Fields"
         run: |
-          sf scanner run --target "./force-app/**/*.field-meta.xml,./force-app/**/*.object-meta.xml" --pmdconfig ./.pmd/sobject-ruleset.xml --severity-threshold 3 --outfile "scan-results.json" --format json --normalize-severity
+          sf scanner run --engine pmd --target "./force-app/**/*.field-meta.xml,./force-app/**/*.object-meta.xml" --pmdconfig ./.pmd/sobject-ruleset.xml --severity-threshold 3 --outfile "scan-results.json" --format json --normalize-severity
 
       - name: "Handle Scan Results"
         if: failure()
@@ -61,49 +41,53 @@ jobs:
 
   pmd-flow:
     runs-on: ubuntu-latest
-    name: "Run PMD for Flows"
+    name: "PMD for Flows"
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
       - uses: Szandor72/devops-center-actions/.github/install-tooling@main
-      - name: "Identify Files to Scan"
-        run: |
-          find ./ -name '*.flow-meta.xml' > flowsToScan.txt
-      - name: "Show File Details"
-        run: |
-          cat flowsToScan.txt
       - name: "Show Rule Details"
         run: |
           cat ./.pmd/flow-ruleset.xml
-      - name: "Use Flow Ruleset"
+      - name: "Fetch all Files and prepare scan"
         run: |
-          npx pmd \
-             -R ./.pmd/flow-ruleset.xml \
-             --file-list flowsToScan.txt \
-             -f text
+          git fetch --all
+          node .ci/prepare-scan.js
+      - name: "Scan Flows"
+        run: |
+          sf scanner run --engine pmd --target "./force-app/**/*.flow-meta.xml" --pmdconfig ./.pmd/flow-ruleset.xml --severity-threshold 3 --outfile "scan-results.json" --format json --normalize-severity
+
+      - name: "Handle Scan Results"
+        if: failure()
+        run: |
+          node .ci/parse-scan-results.js
 
   pmd-misc:
-    runs-on: ubuntu-latest
-    name: "Run PMD for Miscellaneaous Metadata"
+        runs-on: ubuntu-latest
+    name: "PMD for Flows"
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
       - uses: Szandor72/devops-center-actions/.github/install-tooling@main
-      - name: "Identify Files to Scan"
-        run: |
-          find ./ -name '*.flexipage-meta.xml' > metadataToScan.txt
-      - name: "Show File Details"
-        run: |
-          cat metadataToScan.txt
       - name: "Show Rule Details"
         run: |
           cat ./.pmd/misc-ruleset.xml
-      - name: "Use Misc Ruleset"
+      - name: "Fetch all Files and prepare scan"
         run: |
-          npx pmd \
-             -R ./.pmd/misc-ruleset.xml \
-             --file-list metadataToScan.txt \
-             -f text
+          git fetch --all
+          node .ci/prepare-scan.js
+      - name: "Scan Flows"
+        run: |
+          sf scanner run --engine pmd --target "./force-app/" --pmdconfig ./.pmd/misc-ruleset.xml --severity-threshold 3 --outfile "scan-results.json" --format json --normalize-severity
+
+      - name: "Handle Scan Results"
+        if: failure()
+        run: |
+          node .ci/parse-scan-results.js
 
   # commitlint is used to enforce commit message format
   # Since DevOps Center does its own commit msgs, this cannot be used
