@@ -58,7 +58,6 @@ jobs:
       - name: "Scan Flows"
         run: |
           sf scanner run --engine pmd --target "./force-app/**/*.flow-meta.xml" --pmdconfig ./.pmd/flow-ruleset.xml --severity-threshold 3 --outfile "scan-results.json" --format json --normalize-severity
-
       - name: "Handle Scan Results"
         if: failure()
         run: |
@@ -66,7 +65,7 @@ jobs:
 
   pmd-misc:
     runs-on: ubuntu-latest
-    name: "PMD for Flows"
+    name: "PMD for other Metadata"
     steps:
       - uses: actions/checkout@v4
         with:
@@ -83,7 +82,6 @@ jobs:
       - name: "Scan Flows"
         run: |
           sf scanner run --engine pmd --target "./force-app/" --pmdconfig ./.pmd/misc-ruleset.xml --severity-threshold 3 --outfile "scan-results.json" --format json --normalize-severity
-
       - name: "Handle Scan Results"
         if: failure()
         run: |
@@ -116,4 +114,4 @@ jobs:
           prettier_options: --write **/*.{cls,cmp,component,css,html,js,json,md,page,trigger,xml,yaml,yml} --no-error-on-unmatched-pattern
           same_commit: True
           only_changed: True
-          prettier_plugins: "prettier-plugin-apex @prettier/plugin-xml"
+          prettier_plugins: "prettier-plugin-apex@1.10.0 @prettier/plugin-xml@2.0.1"
