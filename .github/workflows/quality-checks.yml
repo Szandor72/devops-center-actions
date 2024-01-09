@@ -37,12 +37,43 @@ jobs:
              --file-list sObjectsToScan.txt \
              -f text
 
+  pmd-sobject2:
+    runs-on: ubuntu-latest
+    name: "Run PMD for sObjects with SFDX SCANNER"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+      - uses: Szandor72/devops-center-actions/.github/install-tooling@main
+      - name: "Fetch all Files and prepare scan"
+        run: |
+          git fetch --all
+          node .ci/prepare-scan.js
+
+      - name: "Install Salesforce CLI"
+        run: |
+          npm install @salesforce/cli --location=global
+
+      - name: "Install plugin"
+        run: |
+          sf plugins install @salesforce/sfdx-scanner
+
+      - name: "Scan sObjects and Custom Fields"
+        run: |
+          sf scanner run --target "./force-app/**/*.field-meta.xml,./force-app/**/*.object-meta.xml" --pmdconfig .\.pmd\sobject-ruleset.xml --severity-threshold 3 --outfile "scan-results.json" --format json --normalize-severity
+
+      - name: "Handle Scan Results"
+        if: failure()
+        run: |
+          node .ci/parse-scan-results.js
+
   pmd-flow:
     runs-on: ubuntu-latest
     name: "Run PMD for Flows"
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
       - uses: Szandor72/devops-center-actions/.github/install-tooling@main
       - name: "Identify Files to Scan"
         run: |
@@ -64,8 +95,8 @@ jobs:
     runs-on: ubuntu-latest
     name: "Run PMD for Miscellaneaous Metadata"
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
       - uses: Szandor72/devops-center-actions/.github/install-tooling@main
       - name: "Identify Files to Scan"
         run: |
@@ -94,19 +125,20 @@ jobs:
   #         fetch-depth: 0
   #     - uses: wagoid/commitlint-github-action@v5
 
-  # stopped working, parsers cannot be inferred for xml and apex; no clue why as plugins seem to be installed but not recognized
-  # prettier-formatting:
-  #   name: "Format with Prettier"
-  #   needs: [lwc-jest, pmd-sobject, pmd-flow, pmd-misc]
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #       with:
-  #         fetch-depth: 0
-  #     - uses: Szandor72/devops-center-actions/.github/install-tooling@main
-  #     - uses: creyD/prettier_action@v4.3
-  #       with:
-  #         prettier_options: --write **/*.{cls,cmp,component,css,html,js,json,md,page,trigger,xml,yaml,yml} --no-error-on-unmatched-pattern
-  #         same_commit: True
-  #         only_changed: True
-  #         prettier_plugins: "prettier-plugin-apex @prettier/plugin-xml"
+  # stopped working, parsers cannot be inferred for xml and apex; no clue why as plugins seem to be installed but not
+  # TODO hardcode plugin versions - local tests showed it will help
+  prettier-formatting:
+    name: "Format with Prettier"
+    needs: [lwc-jest, pmd-sobject, pmd-flow, pmd-misc]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: Szandor72/devops-center-actions/.github/install-tooling@main
+      - uses: creyD/prettier_action@v4.3
+        with:
+          prettier_options: --write **/*.{cls,cmp,component,css,html,js,json,md,page,trigger,xml,yaml,yml} --no-error-on-unmatched-pattern
+          same_commit: True
+          only_changed: True
+          prettier_plugins: "prettier-plugin-apex @prettier/plugin-xml"
