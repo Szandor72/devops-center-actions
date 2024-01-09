@@ -18,16 +18,20 @@ runs:
           ${{ runner.os }}-build-
           ${{ runner.os }}-
 
-    - name: Install Dependencies
+    - name: Install Dependencies and copy config files and rules
       if: steps.cache-nodemodules.outputs.cache-hit != 'true'
       run: |
-        npm ci
-        npm install @salesforce/cli --location=global
-        sf plugins install @salesforce/sfdx-scanner
+        npm ci --prefer-offline --no-audit
       shell: bash
 
-    - name: Copy local files only
+    - name: Copy config files and rules only
       if: steps.cache-nodemodules.outputs.cache-hit == 'true'
       run: |
         npm run postinstall
+      shell: bash
+
+    - name: Install SF CLI and SFDX Scanner Plugin
+      run: |
+        npm install @salesforce/cli --location=global
+        sf plugins install @salesforce/sfdx-scanner
       shell: bash
