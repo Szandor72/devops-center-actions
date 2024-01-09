@@ -22,6 +22,8 @@ runs:
       if: steps.cache-nodemodules.outputs.cache-hit != 'true'
       run: |
         npm ci
+        npm install @salesforce/cli --location=global
+        sf plugins install @salesforce/sfdx-scanner
       shell: bash
 
     - name: Copy local files only

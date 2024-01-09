@@ -52,15 +52,6 @@ jobs:
         run: |
           git fetch --all
           node .ci/prepare-scan.js
-
-      - name: "Install Salesforce CLI"
-        run: |
-          npm install @salesforce/cli --location=global
-
-      - name: "Install plugin"
-        run: |
-          sf plugins install @salesforce/sfdx-scanner
-
       - name: "Scan sObjects and Custom Fields"
         run: |
           sf scanner run --target "./force-app/**/*.field-meta.xml,./force-app/**/*.object-meta.xml" --pmdconfig ./.pmd/sobject-ruleset.xml --severity-threshold 3 --outfile "scan-results.json" --format json --normalize-severity
