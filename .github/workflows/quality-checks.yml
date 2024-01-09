@@ -65,7 +65,7 @@ jobs:
           node .ci/parse-scan-results.js
 
   pmd-misc:
-        runs-on: ubuntu-latest
+    runs-on: ubuntu-latest
     name: "PMD for Flows"
     steps:
       - uses: actions/checkout@v4
