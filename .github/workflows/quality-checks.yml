@@ -61,7 +61,7 @@ jobs:
 
       - name: "Scan sObjects and Custom Fields"
         run: |
-          sf scanner run --target "./force-app/**/*.field-meta.xml,./force-app/**/*.object-meta.xml" --pmdconfig .\.pmd\sobject-ruleset.xml --severity-threshold 3 --outfile "scan-results.json" --format json --normalize-severity
+          sf scanner run --target "./force-app/**/*.field-meta.xml,./force-app/**/*.object-meta.xml" --pmdconfig ./.pmd/sobject-ruleset.xml --severity-threshold 3 --outfile "scan-results.json" --format json --normalize-severity
 
       - name: "Handle Scan Results"
         if: failure()
@@ -129,7 +129,7 @@ jobs:
   # TODO hardcode plugin versions - local tests showed it will help
   prettier-formatting:
     name: "Format with Prettier"
-    needs: [lwc-jest, pmd-sobject, pmd-flow, pmd-misc]
+    # needs: [lwc-jest, pmd-sobject, pmd-flow, pmd-misc]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
