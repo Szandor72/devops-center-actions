@@ -45,6 +45,8 @@ jobs:
         with:
           fetch-depth: 0
       - uses: actions/setup-node@v4
+        with:
+          cache: "yarn"
       - uses: Szandor72/devops-center-actions/.github/install-tooling@main
       - name: "Fetch all Files and prepare scan"
         run: |
