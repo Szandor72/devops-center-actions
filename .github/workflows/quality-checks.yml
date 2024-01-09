@@ -101,7 +101,7 @@ jobs:
   # for the apex stuff to run, prettier versions must match specific plugin versions
   prettier-formatting:
     name: "Format with Prettier"
-    # needs: [lwc-jest, pmd-sobject, pmd-flow, pmd-misc]
+    needs: [lwc-jest, pmd-sobject, pmd-flow, pmd-misc]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
