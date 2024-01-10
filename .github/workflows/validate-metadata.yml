@@ -1,19 +1,9 @@
-name: Quality Checks
+name: 
 
 on:
   workflow_call:
 
 jobs:
-  lwc-jest:
-    runs-on: ubuntu-latest
-    name: "LWC Tests"
-    steps:
-      - uses: actions/checkout@v3
-      - uses: Szandor72/devops-center-actions/.github/install-tooling@main
-      - name: Run sfdx-lwc-jest
-        run: |
-          npm run test
-
   pmd-sobject:
     runs-on: ubuntu-latest
     name: "PMD for sObjects"
@@ -98,7 +88,7 @@ jobs:
   #         fetch-depth: 0
   #     - uses: wagoid/commitlint-github-action@v5
 
-  # for the apex stuff to run, prettier versions must match specific plugin versions
+  # to prettify apex and other metadata, we need to use an older prettier version and also match specific plugin versions
   prettier-formatting:
     name: "Format with Prettier"
     needs: [lwc-jest, pmd-sobject, pmd-flow, pmd-misc]

@@ -1,10 +1,10 @@
-name: SFDX Scanner
+name: Validate Code and LWC Tests
 
 on:
   workflow_call:
 
 jobs:
-  prepare-scan:
+  code-scan:
     runs-on: ubuntu-latest
     name: "Code Scan"
     steps:
@@ -12,38 +12,40 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
       - uses: Szandor72/devops-center-actions/.github/install-tooling@main
-
       - name: "Fetch all Files and prepare scan"
         run: |
           git fetch --all
           node .ci/prepare-scan.js
-
       - name: "Populate auth file and log in to Org"
         run: |
           echo ${{ secrets.INTEGRATION_SANDBOX_SFDX_URL}} > ./INTEGRATION_SANDBOX_SFDX_URL.auth
           sf org login sfdx-url --sfdx-url-file ./INTEGRATION_SANDBOX_SFDX_URL.auth --alias integration_sandbox --set-default
-
       - name: "Run Legacy Scan on modified legacy files"
         run: |
           sf scanner run --target ./legacy-metadata/ --engine "pmd,eslint-lwc,retire-js" --category "Security,Performance,problem,Insecure Dependencies" --outfile "legacy-scan-results.json" --format json --normalize-severity
-
       - name: "Parse Legacy Scan Results and Upload to Org"
         run: |
           node .ci/parse-scan-results.js legacy-scan-results.json legacy-scan-results.csv
-
       - name: "Store Legacy Scan Results on GitHub"
         uses: actions/upload-artifact@v3
         with:
           name: legacy-scan-results
           path: legacy-scan-results.csv
-
       - name: "Run Strict Scan on non legacy files"
         run: |
           sf scanner run --target ./force-app/ --severity-threshold 3 --outfile "scan-results.json" --format json --normalize-severity
-
       - name: "Handle Scan Results for non legacy files"
         if: failure()
         run: |
           node .ci/parse-scan-results.js
+
+  lwc-jest:
+    runs-on: ubuntu-latest
+    name: "LWC Tests"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: Szandor72/devops-center-actions/.github/install-tooling@main
+      - name: Run sfdx-lwc-jest
+        run: |
+          npm run test

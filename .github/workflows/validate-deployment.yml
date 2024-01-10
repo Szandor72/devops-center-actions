@@ -1,0 +1,24 @@
+name: Validate Deployment
+
+on:
+  workflow_call:
+
+jobs:
+  prepare-scan:
+    runs-on: ubuntu-latest
+    name: "Test Deployment and Test Runs"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: Szandor72/devops-center-actions/.github/install-tooling@main
+      - name: "Populate auth file with DEVHUB_SFDX_URL secret"
+        run: |
+          echo ${{ secrets.INTEGRATION_SANDBOX_SFDX_URL}} > ./INTEGRATION_SANDBOX_SFDX_URL.auth
+
+      - name: Authenticate against integration sandbox
+        run:
+          sf org login sfdx-url --sfdx-url-file ./INTEGRATION_SANDBOX_SFDX_URL.auth
+          --set-default --alias integration_sandbox
+
+      - name: Validate deployment and run local tests
+        run: sf project deploy validate --source-dir force-app --wait 120
+          --test-level=RunLocalTests --target-org integration_sandbox
