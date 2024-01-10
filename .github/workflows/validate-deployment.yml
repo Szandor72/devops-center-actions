@@ -4,13 +4,13 @@ on:
   workflow_call:
 
 jobs:
-  prepare-scan:
+  validate-deployment:
     runs-on: ubuntu-latest
     name: "Test Deployment and Test Runs"
     steps:
       - uses: actions/checkout@v4
       - uses: Szandor72/devops-center-actions/.github/install-tooling@main
-      - name: "Populate auth file with DEVHUB_SFDX_URL secret"
+      - name: "Populate auth file with INTEGRATION_SANDBOX_SFDX_URL secret"
         run: |
           echo ${{ secrets.INTEGRATION_SANDBOX_SFDX_URL}} > ./INTEGRATION_SANDBOX_SFDX_URL.auth
 
