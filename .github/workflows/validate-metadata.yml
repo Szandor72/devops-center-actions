@@ -1,4 +1,4 @@
-name: 
+name:
 
 on:
   workflow_call:
@@ -91,10 +91,10 @@ jobs:
   # to prettify apex and other metadata, we need to use an older prettier version and also match specific plugin versions
   prettier-formatting:
     name: "Format with Prettier"
-    needs: [lwc-jest, pmd-sobject, pmd-flow, pmd-misc]
+    needs: [pmd-sobject, pmd-flow, pmd-misc]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           ref: ${{ github.head_ref }}
           fetch-depth: 0
