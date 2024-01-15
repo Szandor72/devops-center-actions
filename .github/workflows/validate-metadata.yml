@@ -1,4 +1,4 @@
-name:
+name: Validate Metadata
 
 on:
   workflow_call:
@@ -99,10 +99,12 @@ jobs:
           ref: ${{ github.head_ref }}
           fetch-depth: 0
       - uses: Szandor72/devops-center-actions/.github/install-tooling@main
+        with:
+          install_sfdx_scanner: false
       - uses: creyD/prettier_action@v4.3
         with:
           prettier_version: 2.6.0
           prettier_options: --write **/*.{cls,cmp,component,css,html,js,json,md,page,trigger,xml,yaml,yml} --no-error-on-unmatched-pattern
           # same_commit: True
           only_changed: True
-          prettier_plugins: "prettier-plugin-apex@1.10.0 @prettier/plugin-xml@2.0.1"
+          prettier_plugins: "prettier-plugin-apex@1.13.0 @prettier/plugin-xml@2.0.1"

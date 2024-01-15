@@ -1,5 +1,10 @@
 name: "npm-cache"
 description: "Cache npm modules and run npm ci if cache is not hit"
+inputs:
+  install_sfdx_scanner:
+    description: "Install SFDX Scanner Plugin"
+    required: false
+    default: "true"
 
 runs:
   using: "composite"
@@ -33,5 +38,7 @@ runs:
     - name: Install SF CLI and SFDX Scanner Plugin
       run: |
         npm install @salesforce/cli --location=global
-        sf plugins install @salesforce/sfdx-scanner
+        if [ "${{ inputs.install_scanner }}" = "true" ]; then
+          sf plugins install @salesforce/sfdx-scanner
+        fi
       shell: bash
