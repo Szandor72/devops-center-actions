@@ -67,6 +67,7 @@ jobs:
           cat ./.pmd/misc-ruleset.xml
       - name: "Fetch all Files and prepare scan"
         run: |
+          # TODO is fetch --all needed in context of fetch depth above?
           git fetch --all
           node .ci/prepare-scan.js
       - name: "Scan Flows"

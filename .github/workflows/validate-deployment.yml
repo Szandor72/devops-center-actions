@@ -10,9 +10,23 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: Szandor72/devops-center-actions/.github/install-tooling@main
+        with:
+          install_sfdx_scanner: false
       - name: "Populate auth file with INTEGRATION_SANDBOX_SFDX_URL secret"
         run: |
           echo ${{ secrets.INTEGRATION_SANDBOX_SFDX_URL}} > ./INTEGRATION_SANDBOX_SFDX_URL.auth
+
+      - name: "Populate auth file with DEVOPS_CENTER_HOME_PROD secret"
+        run: |
+          echo ${{ secrets.PROD_DEVOPS_CENTER_HOME_SFDX_URL}} > ./PROD_DEVOPS_CENTER_HOME_SFDX_URL.auth
+
+      - name: Authenticate against DevOps Center Home (Production Org)
+        run:
+          sf org login sfdx-url --sfdx-url-file ./PROD_DEVOPS_CENTER_HOME_SFDX_URL.auth
+          --set-default --alias PROD_DEVOPS_CENTER_HOME
+
+      - name: Create Manifest File for Deployment
+        run: node .ci/create-manifest.js ${{ github.event.pull_request.head.ref }}
 
       - name: Authenticate against integration sandbox
         run:
@@ -20,5 +34,5 @@ jobs:
           --set-default --alias integration_sandbox
 
       - name: Validate deployment and run local tests
-        run: sf project deploy validate --source-dir force-app --wait 120
+        run: sf project deploy validate --manifest package.xml --wait 120
           --test-level=RunLocalTests --target-org integration_sandbox
