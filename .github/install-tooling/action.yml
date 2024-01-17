@@ -38,7 +38,7 @@ runs:
     - name: Install SF CLI and SFDX Scanner Plugin
       run: |
         npm install @salesforce/cli --location=global
-        if [ "${{ inputs.install_scanner }}" = "true" ]; then
+        if [ "${{ inputs.install_sfdx_scanner }}" = "true" ]; then
           sf plugins install @salesforce/sfdx-scanner
         fi
       shell: bash
