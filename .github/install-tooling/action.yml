@@ -17,8 +17,8 @@ runs:
       with:
         # caching node_modules
         path:
-          - node_modules
-          - $HOME/.cache/sf/yarn
+          - 'node_modules'
+          - '~/.cache/sf/yarn'
         key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
         restore-keys: |
           ${{ runner.os }}-build-${{ env.cache-name }}-
