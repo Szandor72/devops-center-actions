@@ -26,7 +26,9 @@ jobs:
           --set-default --alias PROD_DEVOPS_CENTER_HOME
 
       - name: Create Manifest File for Deployment
-        run: node .ci/create-manifest.js ${{ github.event.pull_request.head.ref }}
+        run: |
+          node .ci/create-manifest.js ${{ github.event.pull_request.head.ref }}
+          cat package.xml
 
       - name: Authenticate against integration sandbox
         run:
